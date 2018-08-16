@@ -1,9 +1,14 @@
-module.exports = function (app, db, collectionName) {
-    app.get('/create/collection', (req, res) => {
-        db.createCollection(collectionName);
-        db.close();
+module.exports = function (app, router, db) {
+    app.post('/api/create/collection/:collectionName', (req, res) => {
+        db.createCollection(req.params.collectionName).then(response => {
+            db.close();
+            res.json(req.params);
+        }).catch(err => {
+            res.send(err);
+        })
+
     })
-    app.get('/userData', (req, res) => {
+    app.get('/api/userData', (req, res) => {
         dbs.production.collection('userData').find({}).toArray((err, docs) => {
             if (err) {
                 console.log(err)
@@ -13,5 +18,6 @@ module.exports = function (app, db, collectionName) {
             }
         })
     });
+    require('../auth/authRouters')(router);
     return app
 }

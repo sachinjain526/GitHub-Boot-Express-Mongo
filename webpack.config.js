@@ -7,9 +7,6 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 module.exports = {
   mode: 'development',
   watch: true,
-  resolve: {
-    extensions: ['.js', '.scss'],
-  },
   entry: ['./src/js/main.js'], // it can be multiple file. For multiple file use array with proper path
   output: {// this is for output where you want to put your file after complete build process
     path: path.resolve(__dirname, 'dist'),
