@@ -5,19 +5,15 @@ const express = require('express'),
   passport = require('passport'),
   session = require('express-session');
 const intializeDatabase = require("./mongoConnect/connection");
-const routes = require("./mongoConnect/routes");
+const mongoRoutes = require("./mongoConnect/mongoRoutes");
+const authRoutes = require('./auth/authRouters');
 // Create global app object
 const app = express();
 const router = express.Router();
 
 // middle ware start 
-
-app.use('/api', router);
-app.use('/auth', router);
-// for cors
 app.use(cors());
 
-// for body parser
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(bodyParser.json());
@@ -46,7 +42,11 @@ app.use(passport.session());
 
 intializeDatabase().then(db => {
   // Initialize the application once database connections are ready.
-  routes(app, router, db).listen(process.env.PORT || 3000, () => console.log('Listening on port 3000'))
+  app.listen(process.env.PORT || 3000, function () {
+    mongoRoutes(app, db);
+    authRoutes(app, db);
+    console.log("server is running on port 3000");
+  })
 }).catch(err => {
   console.error('Failed to make all database connections!')
   console.error(err)

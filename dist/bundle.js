@@ -230,7 +230,7 @@ eval("module.exports = function(originalModule) {\n\tif (!originalModule.webpack
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nvar jQuery = __webpack_require__(/*! jquery */ \"./node_modules/jquery/dist/jquery.js\");\n\njQuery(document).on('ajaxSend', function () {\n  var interval = setInterval(function () {\n    jQuery('body').append(\"<div class='loading' id='ajaxSpinner'></div>\");\n    clearInterval(interval);\n  }, 1);\n}).on('ajaxComplete', function () {\n  jQuery('#ajaxSpinner').remove();\n});\n\n//# sourceURL=webpack:///./src/js/AjaxSetting.js?");
+eval("\n\nvar jQuery = __webpack_require__(/*! jquery */ \"./node_modules/jquery/dist/jquery.js\");\n\njQuery(document).on('ajaxSend', function () {\n  if (!jQuery('#ajaxSpinner').length) {\n    jQuery('body').append(\"<div class='loading' id='ajaxSpinner'></div>\");\n  }\n}).on('ajaxStop', function () {\n  jQuery('#ajaxSpinner').remove();\n});\n\n//# sourceURL=webpack:///./src/js/AjaxSetting.js?");
 
 /***/ }),
 
