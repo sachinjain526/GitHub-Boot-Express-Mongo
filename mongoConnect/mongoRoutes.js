@@ -19,13 +19,8 @@ module.exports = function (app, db) {
             }
         })
     });
-    app.post('/api/users', (req, res) => {
-        dbs.collection('users').insertOne(req.body).then(response => {
-            db.close();
-            res.json(req.params);
-        }).catch(err => {
-            res.send(err);
-        })
-
-    })
+    app.get('/api/current_user', (req, res) => {// it will current user detail on screan
+        res.json(req.user);
+        console.log(req.user);
+    });
 }

@@ -35,9 +35,10 @@
                     </a>
                 </li>
             </ul>
-            <div class="form-inline my-2 my-lg-0">
-                <a class="btn btn-primary my-2 my-sm-0 mx-2" href='/logout'>LogOut</a>
-                <a class="btn btn-success my-2 my-sm-0 mx-2" href='/auth/github'>Login With GitHub</a>
+            <div class="form-inline my-2 my-lg-0" id="authSection">
+                <a class="btn btn-link my-2 my-sm-0 mx-2" href='/auth/github' id="login">Login With GitHub</a>
+                <a class="btn btn-link my-2 my-sm-0 mx-2 d-none" href='#' id="userInfo"></a>
+                <a class="btn btn-link my-2 my-sm-0 mx-2 d-none" href='/logout' id="logout">LogOut</a>
             </div>
         </div>
     </nav>

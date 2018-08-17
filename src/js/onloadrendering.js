@@ -6,9 +6,9 @@ import createAlluserRepos from './getAlluserRepos/userReposServices';
 import createRepoWidgets from './repoWidgets/repoWidgetsView';
 import createIssueWidgets from './issueWidgets/issueWidgetsView';
 import createCollaboratorWidgets from './collaboratorWidgets/collaboratorWidgetsView';
-import { getHistory } from './GetDataService';
 import { createCommonClosedOrSubmitWidget } from './localUtility';
 import renderIsuueWidgets from './getAndupdateAllissues/userIssueWidgetView';
+import createModelPopup from './createModal/createModalWidget';
 
 const jQuery = require('jquery');
 
@@ -34,9 +34,45 @@ function initialPageRendering(data) {
   });
 }
 
+function updateView(data) {
+  jQuery('#authSection').find('.btn-link').toggleClass('d-none');
+  if (data) {
+    jQuery('#userInfo').html(data.displayName);
+  }
+}
+
 function onLoadEventToFetchData() {
-  getHistory(initialPageRendering);
-  createAlluserRepos('userRepoSection');
+  jQuery('body').on('click', '#logout', () => {
+    updateView();
+    localStorage.removeItem('userInfo');
+  });
+
+  const userInfo = localStorage.getItem('userInfo');
+
+  if (userInfo) {
+    const userData = JSON.parse(userInfo);
+    updateView(userData);
+  } else {
+    jQuery.ajax({
+      url: '/api/current_user',
+      method: 'get',
+      dataType: 'json',
+    }).done((ResData) => {
+      if (ResData) {
+        const { accessToken, userName, displayName } = ResData;
+        updateView({ displayName });
+        localStorage.setItem('userInfo', JSON.stringify({ accessToken, userName, displayName }));
+        initialPageRendering(ResData.history);
+        createAlluserRepos('userRepoSection', ResData.userName);
+      } else {
+        console.log('Please login Again');
+      }
+    }).fail((jqXHR) => {
+      createModelPopup({
+        modalId: 'errorModal', modalHeading: `Error-${jqXHR.status}`, ClassName: 'bg-danger text-white', modalContent: 'there is login isuue', buttonName: 'Ok',
+      });
+    });
+  }
 }
 function renderWidgets() {
   const curentState = store.getState();

@@ -1,7 +1,7 @@
 
 const passport = require('passport'),
     GitHubStrategy = require('passport-github').Strategy;
-
+const jsonWebToken = require('jsonwebtoken');
 module.exports = (app, db) => {
     passport.serializeUser(function (user, done) {
         done(null, user);
@@ -13,11 +13,10 @@ module.exports = (app, db) => {
     passport.use(new GitHubStrategy({
         clientID: "961a57a59981d282cfb0",
         clientSecret: "1b8ad4642245ec7d228f0b5ccb4cc647791d5609",
-        callbackURL: "http://localhost:3000/auth/github/callback"
+        callbackURL: "/auth/github/callback"
     },
         function (accessToken, refreshToken, profile, done) {
             const tempObj = {
-                accessToken,
                 _id: profile.id,
                 displayName: profile.displayName,
                 userName: profile.username,
@@ -25,6 +24,10 @@ module.exports = (app, db) => {
                 photoUrl: profile.photos[0].value,
                 profileUrl: profile.profileUrl
             }
+            let jsonActionToken = jsonWebToken.sign(tempObj, app.get('jwtSecret'), {
+                expiresIn: 3600 * 24 * 365
+            });
+            tempObj['accessToken'] = jsonActionToken;
             db.collection("users").findOne({}, { _id: profile.id }).then((result) => {
                 if (!result) {
                     db.collection("users").insertOne(tempObj).then((result) => {
@@ -53,10 +56,6 @@ module.exports = (app, db) => {
         });
 
     /* GET users listing. */
-    app.get('/api/current_user', (req, res) => {// it will current user detail on screan
-        res.send(req.user);
-        console.log(req.user);
-    });
     app.get('/login', function (req, res, next) {
         console.log("redirect to login");
     });

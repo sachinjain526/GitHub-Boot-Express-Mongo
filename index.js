@@ -2,16 +2,22 @@ const express = require('express'),
   bodyParser = require('body-parser'),
   cors = require('cors'),
   errorhandler = require('errorhandler'),
-  passport = require('passport'),
-  session = require('express-session');
+  passport = require('passport');
+cookieSession = require('cookie-session'); // to manage cookie and session for express server
 const intializeDatabase = require("./mongoConnect/connection");
 const mongoRoutes = require("./mongoConnect/mongoRoutes");
 const authRoutes = require('./auth/authRouters');
+const jwtMiddleWare = require('./middlewares/jwtMiddleware');
 // Create global app object
 const app = express();
 const router = express.Router();
 
 // middle ware start 
+app.use(cookieSession({
+  name: 'session',
+  keys: ['asdfghjkl'],
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}))
 app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -31,14 +37,12 @@ app.use(function (req, res, next) {
 app.use(errorhandler());
 
 // for sesion
-app.use(session({
-  secret: 's3cr3t',
-  resave: true,
-  saveUninitialized: true
-}));
 app.use(passport.initialize());
 app.use(passport.session());
 // finally, let's start our server...
+app.set('jwtSecret', 'ashkdbahbhabcjhbahbcjhabsuhqaedgqwdvuqbc');
+
+app.use(jwtMiddleWare());
 
 intializeDatabase().then(db => {
   // Initialize the application once database connections are ready.
