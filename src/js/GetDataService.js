@@ -55,6 +55,23 @@ function getInputFromRecastAPi(input, callback) {
     });
   });
 }
+function getHistory(callback) {
+  const { accessToken } = JSON.parse(localStorage.getItem('userInfo'));
+  jQuery.ajax({
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: accessToken,
+    },
+    url: `${baseUrl}users/history`,
+    method: 'get',
+  }).done((responseData) => {
+    callback(responseData);
+  }).fail((jqXHR) => {
+    createModelPopup({
+      modalId: 'errorModal', modalHeading: `Error-${jqXHR.status}`, ClassName: 'bg-danger text-white', modalContent: 'There is something missing to update history', buttonName: 'Ok',
+    });
+  });
+}
 function saveHistory(passData) {
   const { accessToken } = JSON.parse(localStorage.getItem('userInfo'));
   jQuery.ajax({
@@ -99,5 +116,5 @@ function updateHistory(method, historyId, passData, callback) {
 }
 export {
   commonGetAjaxFunc, commonPostAjaxFunc, getInputFromRecastAPi,
-  updateHistory, saveHistory,
+  updateHistory, saveHistory, getHistory,
 };

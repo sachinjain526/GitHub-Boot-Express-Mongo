@@ -7,7 +7,7 @@
 @import "_nav.scss";
 
 body{
-    background: #ececec;
+    background: #fff;
     overflow-x: hidden;
 }
 /* Absolute Center Spinner */
@@ -70,7 +70,11 @@ main{
     min-height: 449px;
     margin-top: 75px;
     .jumbotron {
-        padding: 2rem;
+        padding: 4rem 0;
+    }
+    .openWidget{
+       background:  #cfd0d29e;
+       font-weight: 700;
     }
 }
 #userRepoSection{
@@ -83,13 +87,7 @@ main{
     }
 }
 footer{
-  background: #73442d;
-}
-.footer-box-section{
-    flex:1 0 32.95%;
-    max-width: 32.95%;
-    border-radius:$border-radius;
-    background: $white;
+  background: #bf6d44;
 }
 .copyright{
     color: $white;
@@ -107,6 +105,10 @@ footer{
   @media (max-width:900px){
     .footer-box-section,.issuesection{
         @include flexScreen(95%);
+        border-bottom: 2px dashed grey;
+    }
+    .footer-box-section:last-child{
+        border-bottom:none;
     }
     .footer-section,#userIsuueContainer{
         align-items:center;

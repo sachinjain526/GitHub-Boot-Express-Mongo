@@ -8,13 +8,12 @@ import createIssueWidgets from './issueWidgets/issueWidgetsView';
 import createCollaboratorWidgets from './collaboratorWidgets/collaboratorWidgetsView';
 import { createCommonClosedOrSubmitWidget } from './localUtility';
 import renderIsuueWidgets from './getAndupdateAllissues/userIssueWidgetView';
-import createModelPopup from './createModal/createModalWidget';
+import { getHistory } from './GetDataService';
 
 const jQuery = require('jquery');
 
 function initialPageRendering(data) {
   jQuery.each(data, (index, value) => {
-    console.log(index);
     if (value.result) {
       createCommonClosedOrSubmitWidget(value);
     } else {
@@ -35,9 +34,13 @@ function initialPageRendering(data) {
 }
 
 function updateView(data) {
-  jQuery('#authSection').find('.btn-link').toggleClass('d-none');
+  jQuery('#mainNavBar').toggleClass('d-none');
   if (data) {
-    jQuery('#userInfo').html(data.displayName);
+    jQuery('#authSection').html(`
+    <a class='btn btn-link my-2 my-sm-0 mr-2' href='#'><img src='${data.photoUrl}' alt='user images'/><span class='d-none'>${data.displayName}</spna></a>
+    <a class='btn btn-danger my-2 my-sm-0 mr-2' href='/logout' id='logout'>LogOut</a>`);
+  } else {
+    jQuery('#authSection').html('<a class=\'btn btn-link my-2 my-sm-0 mr-2\' href=\'/auth/github\'>Login With GitHub</a>');
   }
 }
 
@@ -52,6 +55,8 @@ function onLoadEventToFetchData() {
   if (userInfo) {
     const userData = JSON.parse(userInfo);
     updateView(userData);
+    getHistory(initialPageRendering);
+    createAlluserRepos('userRepoSection', userData.userName);
   } else {
     jQuery.ajax({
       url: '/api/current_user',
@@ -59,18 +64,19 @@ function onLoadEventToFetchData() {
       dataType: 'json',
     }).done((ResData) => {
       if (ResData) {
-        const { accessToken, userName, displayName } = ResData;
+        const {
+          accessToken, userName, displayName, photoUrl,
+        } = ResData;
         updateView({ displayName });
-        localStorage.setItem('userInfo', JSON.stringify({ accessToken, userName, displayName }));
+        localStorage.setItem('userInfo', JSON.stringify({
+          accessToken, userName, displayName, photoUrl,
+        }));
         initialPageRendering(ResData.history);
         createAlluserRepos('userRepoSection', ResData.userName);
-      } else {
-        console.log('Please login Again');
       }
     }).fail((jqXHR) => {
-      createModelPopup({
-        modalId: 'errorModal', modalHeading: `Error-${jqXHR.status}`, ClassName: 'bg-danger text-white', modalContent: 'there is login isuue', buttonName: 'Ok',
-      });
+      console.log(jqXHR);
+      updateView();
     });
   }
 }

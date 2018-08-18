@@ -10,9 +10,10 @@ function collaboratorCallback() {
   });
 }
 function updateCollboratersService(collaborator) {
+  const { userName } = JSON.parse(localStorage.getItem('userInfo'));
   jQuery.ajax({
     header: { 'Content-Length': 0 },
-    url: `${gitBaseUrl}repos/sachinjain526/${collaborator.collaboraterRepo}/collaborators/${collaborator.collaboraterName}`,
+    url: `${gitBaseUrl}repos/${userName}/${collaborator.collaboraterRepo}/collaborators/${collaborator.collaboraterName}`,
     method: collaborator.collaboraterAction,
     dataType: 'json',
     mode: 'cors',

@@ -49,8 +49,8 @@ function CreateRpeoAndIssueWidget(recastData) {
         });
       }
     } else if (intent === 'display-issue') {
-      // / repos/sachinjain526/webapck-conf/issues
-      let url = `${gitBaseUrl}repos/sachinjain526/`;
+      const { userName } = JSON.parse(localStorage.getItem('userInfo'));
+      let url = `${gitBaseUrl}repos/${userName}/`;
       const target = recastData.entities.target ? recastData.entities.target[0].value : '';
       const repoName = recastData.entities.repository ? recastData.entities.repository[0].value : '';
       const state = recastData.entities.state ? recastData.entities.state[0].value : '';
@@ -130,9 +130,6 @@ function eventListener() {
   });
   jQuery('#mainNavBar').on('click', '#AllIssue', () => {
     createUserissueSection('userIsuueContainer', `${gitBaseUrl}user/issues?filter=all&state=all`);
-  });
-  jQuery('#mainNavBar').on('click', '#AddCollaborators', () => {
-    store.dispatch(showCollboratorWidget({}));
   });
   jQuery('body').on('click', '.modalClose', function () {
     const modalId = jQuery(this).parents('.modal').attr('id');

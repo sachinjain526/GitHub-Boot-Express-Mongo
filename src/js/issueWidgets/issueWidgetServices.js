@@ -8,7 +8,8 @@ function completeIssueCreation() {
   });
 }
 function createGitIssue(passData, repoName) {
-  let url = `${gitBaseUrl}repos/sachinjain526/${repoName}/issues`;
+  const { userName } = JSON.parse(localStorage.getItem('userInfo'));
+  let url = `${gitBaseUrl}repos/${userName}/${repoName}/issues`;
   url = url.replace(/\s/g, '');
   commonPostAjaxFunc(url, 'POST', passData, completeIssueCreation);
 }

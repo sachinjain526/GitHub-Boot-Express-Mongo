@@ -22,8 +22,8 @@ function createIssueWidgets(issueData) {
         saveDataInHistory(passedData);
     }
     jQuery('#widgetSection').prepend(`
-        <div class="p-3 my-3 mx-auto border border-info rounded openWidget" id="${componentId}" repo="${issueData.repoName}">
-            <h3 class="text-center mt-2 mb-4 text-danger"> Create Issue </h3>
+        <div class="p-3 my-3 mx-auto rounded openWidget" id="${componentId}" repo="${issueData.repoName}">
+            <h3 class="text-center mt-2 mb-4 text-dark"> Create Issue </h3>
                 <form method="post" action="#" class="w-100 text-center">
                     <div class="form-group row">
                         <label for="${componentId}-title" class="col-sm-3 col-form-label">Title</label>

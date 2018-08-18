@@ -1,16 +1,23 @@
 #main-navbar{
-    background: #73442d;
+    padding: 0 1rem;
+    background: #bf6d44;
     #logo{
-        font-size: 30px;
+        font-size: 20px;
+        pointer-events: none;
         i{
             margin-right: 2px;
         }
     }
     a{
-        @include textprop(20px, $white);
+        @include textprop(16px, $white);
+        font-weight: normal;
     }
     a:hover{
         color: lightseagreen;
+    }
+    img{
+        width: 40px;
+       border-radius: 50%;
     }
 }
 .social-link li{
