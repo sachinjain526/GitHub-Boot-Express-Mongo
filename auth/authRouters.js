@@ -2,6 +2,7 @@
 const passport = require('passport'),
     GitHubStrategy = require('passport-github').Strategy;
 const jsonWebToken = require('jsonwebtoken');
+const keys = require('../config/keys');
 module.exports = (app, db) => {
     passport.serializeUser(function (user, done) {
         done(null, user);
@@ -11,8 +12,8 @@ module.exports = (app, db) => {
         done(null, user);
     });
     passport.use(new GitHubStrategy({
-        clientID: "961a57a59981d282cfb0",
-        clientSecret: "1b8ad4642245ec7d228f0b5ccb4cc647791d5609",
+        clientID: keys.clientID,
+        clientSecret: keys.clientSecret,
         callbackURL: "/auth/github/callback"
     },
         function (accessToken, refreshToken, profile, done) {
@@ -22,12 +23,13 @@ module.exports = (app, db) => {
                 userName: profile.username,
                 email: profile.emails[0].value,
                 photoUrl: profile.photos[0].value,
-                profileUrl: profile.profileUrl
+                profileUrl: profile.profileUrl,
             }
-            let jsonActionToken = jsonWebToken.sign(tempObj, app.get('jwtSecret'), {
+            let jsonActionToken = jsonWebToken.sign(tempObj, keys.jwtSecret, {
                 expiresIn: 3600 * 24 * 365
             });
             tempObj['accessToken'] = jsonActionToken;
+            tempObj.history = [];
             db.collection("users").findOne({}, { _id: profile.id }).then((result) => {
                 if (!result) {
                     db.collection("users").insertOne(tempObj).then((result) => {

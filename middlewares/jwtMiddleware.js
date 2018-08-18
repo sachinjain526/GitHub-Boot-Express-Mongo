@@ -1,4 +1,5 @@
 const jsonWebToken = require('jsonwebtoken');
+const keys = require('../config/keys');
 module.exports = () => {
 	let middleware = (req, res, next) => {
 		if (req.path === "/" || req.path === "/auth/github" || req.path === "/auth/github/callback" || req.path === "/api/current_user" || req.path === "/logout") {
@@ -7,7 +8,7 @@ module.exports = () => {
 			const token = req.body.token || req.query.token || req.headers['authorization'];
 			if (token) {
 				// verifies secret and checks exp
-				jsonWebToken.verify(token, app.get('jwtSecret'), (err, decoded) => {
+				jsonWebToken.verify(token, keys.jwtSecret, (err, decoded) => {
 					if (err) {
 						return res.json({ success: false, message: 'Failed to authenticate token.' });
 					} else {

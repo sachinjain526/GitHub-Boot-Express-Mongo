@@ -8,6 +8,7 @@ const intializeDatabase = require("./mongoConnect/connection");
 const mongoRoutes = require("./mongoConnect/mongoRoutes");
 const authRoutes = require('./auth/authRouters');
 const jwtMiddleWare = require('./middlewares/jwtMiddleware');
+const keys = require('./config/keys');
 // Create global app object
 const app = express();
 const router = express.Router();
@@ -15,7 +16,7 @@ const router = express.Router();
 // middle ware start 
 app.use(cookieSession({
   name: 'session',
-  keys: ['asdfghjkl'],
+  keys: [keys.sessionKey],
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
 app.use(cors());
@@ -40,7 +41,7 @@ app.use(errorhandler());
 app.use(passport.initialize());
 app.use(passport.session());
 // finally, let's start our server...
-app.set('jwtSecret', 'ashkdbahbhabcjhbahbcjhabsuhqaedgqwdvuqbc');
+app.set('jwtSecret', keys.jwtSecret);
 
 app.use(jwtMiddleWare());
 

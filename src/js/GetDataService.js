@@ -56,10 +56,15 @@ function getInputFromRecastAPi(input, callback) {
   });
 }
 function saveHistory(passData) {
+  const { accessToken } = JSON.parse(localStorage.getItem('userInfo'));
   jQuery.ajax({
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: accessToken,
+    },
     url: `${baseUrl}create/history`,
     method: 'POST',
-    data: passData,
+    data: JSON.stringify(passData),
     dataType: 'json',
   }).done(() => {
     createModelPopup({
@@ -72,19 +77,20 @@ function saveHistory(passData) {
   });
 }
 function updateHistory(method, historyId, passData, callback) {
+  const { accessToken } = JSON.parse(localStorage.getItem('userInfo'));
   jQuery.ajax({
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: accessToken,
+    },
     url: `${baseUrl}update/history/${historyId}`,
     method,
     dataType: 'json',
-    data: passData,
+    data: JSON.stringify(passData),
   }).done((response) => {
     if (callback) {
       callback(response);
     }
-    // createModelPopup({
-    //   modalId: 'historymade', modalHeading: 'Confirmation', ClassName: 'bg-success',
-    //  modalContent: 'You have successfully updated history ', buttonName: 'Close',
-    // });
   }).fail((jqXHR) => {
     createModelPopup({
       modalId: 'errorModal', modalHeading: `Error-${jqXHR.status}`, ClassName: 'bg-danger text-white', modalContent: 'There is something missing to update history', buttonName: 'Ok',
