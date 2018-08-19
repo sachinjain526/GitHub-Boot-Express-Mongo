@@ -18,6 +18,7 @@ module.exports = (app, db) => {
     },
         function (accessToken, refreshToken, profile, done) {
             const tempObj = {
+                accessToken,
                 _id: profile.id,
                 displayName: profile.displayName,
                 userName: profile.username,
@@ -28,7 +29,7 @@ module.exports = (app, db) => {
             let jsonActionToken = jsonWebToken.sign(tempObj, keys.jwtSecret, {
                 expiresIn: 3600 * 24 * 365
             });
-            tempObj['accessToken'] = jsonActionToken;
+            tempObj['jwtToken'] = jsonActionToken;
             tempObj.history = [];
             db.collection("users").findOne({}, { _id: profile.id }).then((result) => {
                 if (!result) {
@@ -49,7 +50,7 @@ module.exports = (app, db) => {
     ));
     /* GITHUB ROUTER */
     app.get('/auth/github',
-        passport.authenticate('github', { scope: ['user:email'] }));
+        passport.authenticate('github', { scope: ['repo', 'admin:public_key'] }));
 
     app.get('/auth/github/callback',
         passport.authenticate('github', { failureRedirect: '/login' }),

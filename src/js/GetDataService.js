@@ -1,17 +1,18 @@
-import { gitApiToken, baseUrl } from './KeyAndPath';
+import { baseUrl } from './KeyAndPath';
 import { getErrorDescription } from './localUtility';
 import createModelPopup from './createModal/createModalWidget';
 
 const jQuery = require('jquery');
 // ajax common function
 function commonPostAjaxFunc(url, mehtod, postData, callback) {
+  const { accessToken } = JSON.parse(localStorage.getItem('userInfo'));
   jQuery.ajax({
     url,
     method: mehtod,
     data: JSON.stringify(postData),
     dataType: 'json',
     mode: 'cors',
-    beforeSend(xhr) { xhr.setRequestHeader('Authorization', `BEARER ${gitApiToken}`); },
+    beforeSend(xhr) { xhr.setRequestHeader('Authorization', `TOKEN ${accessToken}`); },
   }).done((responseData) => {
     callback(responseData);
   }).fail((jqXHR) => {
@@ -21,6 +22,7 @@ function commonPostAjaxFunc(url, mehtod, postData, callback) {
   });
 }
 function commonGetAjaxFunc(url, callback) {
+  const { accessToken } = JSON.parse(localStorage.getItem('userInfo'));
   jQuery.ajax({
     headers: {
       'Content-Type': 'application/json',
@@ -29,7 +31,7 @@ function commonGetAjaxFunc(url, callback) {
     method: 'get',
     dataType: 'json',
     mode: 'cors',
-    beforeSend(xhr) { xhr.setRequestHeader('Authorization', `BEARER ${gitApiToken}`); },
+    beforeSend(xhr) { xhr.setRequestHeader('Authorization', `TOKEN ${accessToken}`); },
   }).done((responseData) => {
     callback(responseData);
   }).fail((jqXHR) => {
@@ -56,11 +58,11 @@ function getInputFromRecastAPi(input, callback) {
   });
 }
 function getHistory(callback) {
-  const { accessToken } = JSON.parse(localStorage.getItem('userInfo'));
+  const { jwtToken } = JSON.parse(localStorage.getItem('userInfo'));
   jQuery.ajax({
     headers: {
       'Content-Type': 'application/json',
-      Authorization: accessToken,
+      Authorization: jwtToken,
     },
     url: `${baseUrl}users/history`,
     method: 'get',
@@ -73,11 +75,11 @@ function getHistory(callback) {
   });
 }
 function saveHistory(passData) {
-  const { accessToken } = JSON.parse(localStorage.getItem('userInfo'));
+  const { jwtToken } = JSON.parse(localStorage.getItem('userInfo'));
   jQuery.ajax({
     headers: {
       'Content-Type': 'application/json',
-      Authorization: accessToken,
+      Authorization: jwtToken,
     },
     url: `${baseUrl}create/history`,
     method: 'POST',
@@ -94,11 +96,11 @@ function saveHistory(passData) {
   });
 }
 function updateHistory(method, historyId, passData, callback) {
-  const { accessToken } = JSON.parse(localStorage.getItem('userInfo'));
+  const { jwtToken } = JSON.parse(localStorage.getItem('userInfo'));
   jQuery.ajax({
     headers: {
       'Content-Type': 'application/json',
-      Authorization: accessToken,
+      Authorization: jwtToken,
     },
     url: `${baseUrl}update/history/${historyId}`,
     method,

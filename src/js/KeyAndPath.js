@@ -1,5 +1,4 @@
 const gitBaseUrl = 'https://api.github.com/';
-const gitApiToken = '6082c09a0b663c268436fb1505c2032e45d6cab8';
 const baseUrl = '/api/';
 const repoCreateJson = {
   name: 'Hello-World',
@@ -19,5 +18,5 @@ const issueCreateJson = {
 };
 
 export {
-  gitBaseUrl, gitApiToken, repoCreateJson, issueCreateJson, baseUrl,
+  gitBaseUrl, repoCreateJson, issueCreateJson, baseUrl,
 };

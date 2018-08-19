@@ -33,7 +33,7 @@ module.exports = function (app, db) {
 
     app.get('/api/current_user', (req, res) => {// it will current user detail on screan
         res.json(req.user);
-        console.log(req.user.userName);
+        console.log("current user");
     });
 
     app.patch('/api/update/history/:id', (req, res) => {// it will current user detail on screan

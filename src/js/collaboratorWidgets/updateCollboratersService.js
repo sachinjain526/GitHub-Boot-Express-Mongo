@@ -1,4 +1,4 @@
-import { gitBaseUrl, gitApiToken } from '../KeyAndPath';
+import { gitBaseUrl } from '../KeyAndPath';
 import createModelPopup from '../createModal/createModalWidget';
 import { getErrorDescription } from '../localUtility';
 
@@ -10,14 +10,14 @@ function collaboratorCallback() {
   });
 }
 function updateCollboratersService(collaborator) {
-  const { userName } = JSON.parse(localStorage.getItem('userInfo'));
+  const { userName, accessToken } = JSON.parse(localStorage.getItem('userInfo'));
   jQuery.ajax({
     header: { 'Content-Length': 0 },
     url: `${gitBaseUrl}repos/${userName}/${collaborator.collaboraterRepo}/collaborators/${collaborator.collaboraterName}`,
     method: collaborator.collaboraterAction,
     dataType: 'json',
     mode: 'cors',
-    beforeSend(xhr) { xhr.setRequestHeader('Authorization', `BEARER ${gitApiToken}`); },
+    beforeSend(xhr) { xhr.setRequestHeader('Authorization', `Token ${accessToken}`); },
   }).done((responseData) => {
     collaboratorCallback(responseData);
   }).fail((jqXHR) => {

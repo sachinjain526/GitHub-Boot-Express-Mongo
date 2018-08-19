@@ -65,11 +65,11 @@ function onLoadEventToFetchData() {
     }).done((ResData) => {
       if (ResData) {
         const {
-          accessToken, userName, displayName, photoUrl,
+          accessToken, userName, displayName, photoUrl, jwtToken,
         } = ResData;
         updateView({ displayName });
         localStorage.setItem('userInfo', JSON.stringify({
-          accessToken, userName, displayName, photoUrl,
+          accessToken, userName, displayName, photoUrl, jwtToken,
         }));
         initialPageRendering(ResData.history);
         createAlluserRepos('userRepoSection', ResData.userName);
