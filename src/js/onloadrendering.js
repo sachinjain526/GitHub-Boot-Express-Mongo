@@ -34,13 +34,27 @@ function initialPageRendering(data) {
 }
 
 function updateView(data) {
-  jQuery('#mainNavBar').toggleClass('d-none');
   if (data) {
+    jQuery('#mainNavBar').removeClass('d-none');
+    jQuery('#queryRunner').html(` <div class='container'>
+    <h1 class=''>Write Your Query</h1>
+    <form class='form-inline w-100 m-auto'>
+        <input class='form-control  w-75 mr-2' type='search' placeholder='Type your query..' aria-label='Search' id='queryInput'
+            required>
+        <button class='btn btn-success my-2' type='button' id='submitQuery'>Run Query</button>
+    </form>
+</div>`);
     jQuery('#authSection').html(`
     <a class='btn btn-link my-2 my-sm-0 mr-2' href='#'><img src='${data.photoUrl}' alt='user images'/><span class='d-none'>${data.displayName}</spna></a>
     <a class='btn btn-danger my-2 my-sm-0 mr-2' href='/logout' id='logout'>LogOut</a>`);
   } else {
-    jQuery('#authSection').html('<a class=\'btn btn-link my-2 my-sm-0 mr-2\' href=\'/auth/github\'>Login With GitHub</a>');
+    jQuery('#mainNavBar').addClass('d-none');
+    jQuery('#queryRunner').html(` <div class='container'>
+        <h1 class=''>Welcome to Git Hub Boot</h1>
+        <h4 class='text-danger'> To be continue..</h4>
+        <a class='btn btn-primary my-2 my-sm-0 mr-2' href='/auth/github'>Login With GitHub</a>
+    </div>`);
+    jQuery('#authSection').html('');
   }
 }
 
